@@ -1,5 +1,7 @@
 # 口袋小岛 V0.1
 
+当前独立项目位于 `/workspace/pocket-island`，正在进行 V0.2 发布准备。原始 V0.1 已保留为本地 `v0.1.0` 标签。**尚未发布公网版本。** 发布操作、Git 边界及 iPhone Safari 真机验收清单见 [发布准备记录](docs/RELEASE.md)。
+
 治愈系离线合成小游戏，Vite + TypeScript + Phaser。无服务器、账户、广告、付费服务或 AI API。七级地块由 Phaser Graphics 原创绘制，音效由 Web Audio 实时合成，无外部字体或资源请求。
 
 ## 启动
@@ -29,7 +31,7 @@ npm run preview
 
 包含主菜单、首次教学、玩法图鉴、暂停/设置、重新开始确认和结束页。支持鼠标、触摸及键盘辅助棋盘；提供放置弹性缩放、合成粒子、连锁文字、分数跳动和结束动画。系统低动态效果偏好优先，也可手动减少动态。
 
-每步操作自动写入 localStorage，保存版本号、完整局面、撤销快照及额度、最高分、教学和设置。损坏 JSON/不支持版本恢复默认；非法局面被丢弃但保留合法设置与纪录。存储被浏览器禁用时提示并在内存中继续游戏。关闭页面或切换后台时再次保存。
+每步操作自动写入 localStorage，保存版本号、完整局面、撤销快照及额度、最高分、教学和设置。损坏 JSON/不支持版本恢复默认；非法局面被丢弃但保留合法设置与纪录。存储被浏览器禁用时提示并在内存中继续游戏。在 pagehide 或切换后台时再次保存（浏览器强制结束进程不保证触发生命周期事件）。
 
 ## 离线 PWA
 
@@ -50,6 +52,7 @@ Vite 使用 `base: './'`，manifest、Service Worker、预缓存 URL 均为相�
 src/core/game.ts         状态、棋盘、合成引擎、可序列化随机数与撤销
 src/core/save.ts         版本化存档、校验与存储故障处理
 src/core/game.test.ts    18 项核心规则与存档测试
+src/core/storage.test.ts  2 项浏览器存储失败与恢复测试
 src/render/art.ts        七级原创地块绘制
 src/render/IslandScene.ts Phaser 棋盘、触摸交互与动画
 src/main.ts             主菜单、教学、设置、结束页与生命周期
@@ -62,7 +65,7 @@ scripts/offline.mjs      根据构建产物生成离线预缓存
 
 ## 验证和限制
 
-实际运行结果：`npm test` 18/18 通过；`npm run build` 通过（含 TypeScript 检查）。Chromium 390×844 手机视口实测落子、撤销、静音设置、断网刷新与存档恢复通过，无页面运行错误；根路径与 `/pocket-island/` 子路径均通过。另保存了手机和桌面截图 `screenshot-mobile.png`、`screenshot-desktop.png`。浏览器测试工具临时安装在工作区外，未增加项目运行依赖。未在 iPhone Safari 真机运行测试。
+实际运行结果：`npm test` 20/20 通过（独立目录）；`npm run build` 通过（含 TypeScript 检查）。Chromium 390×844 手机视口实测落子、撤销、静音设置、断网刷新与存档恢复通过，无页面运行错误；根路径与 `/pocket-island/` 子路径均通过。另保存了手机和桌面截图 `screenshot-mobile.png`、`screenshot-desktop.png`。浏览器测试工具临时安装在工作区外，未增加项目运行依赖。未在 iPhone Safari 真机运行测试。
 
 `npm test` 覆盖四向连通、对角线隔离、2/3/4+块、不同等级、连锁与分数、最高等级、满盘与满盘触发合成、无效输入、随机配置、撤销一致性、结束后撤销、存档恢复及非法数据。
 
